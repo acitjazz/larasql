@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.-m-42{
+    margin-top: -10rem;
+}
