@@ -1,8 +1,10 @@
 # Requirement
 
+<pre>
 PHP 8.1 ++
 Node v16 ++ 
 NPM v8 ++
+</pre>
 
 # How to install
 
@@ -23,6 +25,8 @@ NPM v8 ++
 
 Now test it in your browser.
 ## Demo User Admin
+<pre>
 /backend/login
 super@admin.test
-telin1q2w3e++2023
+1q2w3e++2023
+</pre>
