@@ -38,88 +38,12 @@ html,body{
         margin-bottom: 70px;
     }
 }
-
-.icon-telin{
-    background-image: url('/images/icon-telin.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    top: 3px;
-    position: relative;
-    background-size: 16px;
-    width: 16px;
-    height: 16px;
-}
-
 .v-popper__inner {
     max-width: 300px !important;
     background-color: #000 !important;
     font-size: 12px !important;
     padding: 20px !important;
   }
-
-.bg-CLOSED,.bg-Paid{
-    background: #B8FFD0;
-    color: #127634;
-}
-.bg-AWAITING_CONFIRMATION{
-    background: #FEFFB8;
-    color: #797B1A;
-}
-.bg-PENDING{
-    background: #ffe9b8;
-    color: #7b5c1a;
-}
-.bg-OPEN{
-    background: #FFB8B8;
-    color: #850D0D;
-}
-.bg-active{
-    background: #E9001A;
-    color: #fff;
-}
-.bg-ORDER,.bg-Unpaid{
-    background: #FFB8B8;
-    color: #850D0D;
-}
-.bg-TECHNICAL_CLOSED{
-    background: #abdbf7;
-    color: #212a6e;
-}
-.bg-MATCHING,.bg-BILLING{
-    background: #B8FFD0;
-    color: #127634;
-}
-.bg-PROVISIONING{
-    background: #abdbf7;
-    color: #212a6e;
-}
-.bg-EXPIRED{
-    background: #FFB8B8;
-    color: #850D0D;
-}
-.bg-VERIFICATION{
-    background: #FEFFB8;
-    color: #797B1A;
-}
-.bg-CANCELLED{
-    background: #ddb8ff;
-    color: #770d85;
-}
-
-.bg-TERMINATION,.bg-TERMINATED{
-    background: #FEFFB8;
-    color: #797B1A;
-}
-.bg-RENEWAL{
-    background: #ffe9b8;
-    color: #7b5c1a;
-}
-
-.bg-GROOMING,.bg-RENEWAL,.bg-UPGRADING,.bg-DOWNGRADING,.bg-HOT_MIGRATION,.bg-VERIFICATION{
-    background: #abdbf7;
-    color: #212a6e;
-
-}
 .v-step__arrow--dark[data-v-da2d894c]:before{
     background: #000 !important;
 }

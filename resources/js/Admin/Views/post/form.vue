@@ -146,7 +146,7 @@ const changeLangTab = (newtab) => {
                     </div>
                     <div class="block mt-4">
                         <InputLabel for="published_at" value="Published Date" />
-                        <Datepicker v-model="form.published_at" format="dd/MM/yyyy" placeholder="Select Published Date" />
+                        <TextInput type="date" v-model="form.published_at" format="dd/MM/yyyy" placeholder="Select Published Date" />
                         <InputError class="mt-2" :message="form.errors.published_at" />
                     </div>
                     <div class="block mt-4">

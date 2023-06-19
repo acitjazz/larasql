@@ -1,6 +1,5 @@
 
 import { defineAsyncComponent } from 'vue';
-import '@vuepic/vue-datepicker/dist/main.css'
 import { Head,Link } from '@inertiajs/inertia-vue3';
 import { Draggable } from "@he-tree/vue";
 
@@ -19,10 +18,6 @@ const InputLabel = defineAsyncComponent(
 
 const TextInput = defineAsyncComponent(
     () => import('@/Admin/Components/Forms/TextInput.vue')
-)
-
-const TelinUpload = defineAsyncComponent(
-    () => import('@/Admin/Components/Forms/TelinUpload.vue')
 )
 
 const AcitJazzUpload = defineAsyncComponent(
@@ -69,15 +64,6 @@ const Loader = defineAsyncComponent(
 const Tooltip = defineAsyncComponent(
     () => import('@/Admin/Components/Popups/Tooltip.vue')
 )
-const Datepicker = defineAsyncComponent(
-    () => import('@vuepic/vue-datepicker')
-)
-const VCalendar = defineAsyncComponent(
-    () => import('v-calendar')
-)
-const VueSelect = defineAsyncComponent(
-    () => import('vue-select')
-)
 const Td = defineAsyncComponent(
     () => import('@/Admin/Components/Tables/Td.vue')
 )
@@ -120,7 +106,6 @@ export default {
         Vue.component('AOutlineButton', AOutlineButton),
         Vue.component('TextInput', TextInput),
         Vue.component('AcitJazzUpload', AcitJazzUpload),
-        Vue.component('TelinUpload', TelinUpload),
         Vue.component('InputBanners', InputBanners),
         Vue.component('TinyEditor', TinyEditor),
         Vue.component('InputSlug', InputSlug),
@@ -132,9 +117,6 @@ export default {
         Vue.component('InputTitleNumber', InputTitleNumber),
         Vue.component('Tooltip', Tooltip),
         Vue.component('Loader', Loader),
-        Vue.component('Datepicker', Datepicker),
-        Vue.component('VCalendar', VCalendar),
-        Vue.component('VSelect', VueSelect),
 
         //Table Component
         Vue.component('Td', Td),

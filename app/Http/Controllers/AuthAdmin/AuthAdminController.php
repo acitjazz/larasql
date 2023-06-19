@@ -37,12 +37,11 @@ class AuthAdminController extends Controller
         ]);
 
         if($loginemail) {
-            // return Redirect::route('backend.dashboard');
-            return redirect('/backend/dashboard');
+            return redirect()->route('backend.dashboard');
         } else {
             return redirect()->back()
                     ->withInput($request->input())
-                    ->withErrors(['email'=>'Email / Password salah']);
+                    ->withErrors(['email'=>'These credentials do not match our records.']);
         }
     }
 
@@ -58,6 +57,6 @@ class AuthAdminController extends Controller
         Auth::guard('admin')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect()->route('admin.login.create');
     }
 }

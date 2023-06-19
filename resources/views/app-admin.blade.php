@@ -13,7 +13,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
         <script charset="utf-8" type="text/javascript" src="https://js.hsforms.net/forms/embed/v2.js"></script>
         @if (request()->segment(1) == 'backend' && request()->segment(2) == 'login')
-        <script src="https://www.google.com/recaptcha/api.js?render=6Ld3PBImAAAAAA_zzdnsOCw81mZHo6h_zODHtDFQ"></script>
+        <script src="https://www.google.com/recaptcha/api.js?render="{{ env('GOOGLE_RECAPTCHA_SITE_KEY') }}></script>
         @endif
         <!-- Scripts -->
         @routes

@@ -136,58 +136,51 @@ function vueFormExist($name,$folder,$default = 'form'){
 }
 
 
-function uploadLocal($file ,$folder='user', $user= null)
+function uploadLocal($request ,$folder='user', $user= null)
 {
     try {
-        $date = Carbon::now()->format('dmY-his');
-        $fileName = $file->getClientOriginalName();
-        $extinsion = $file->getClientOriginalExtension();
-        $fileSize = $file->getSize();
+        $files = $request->file;
+        $medias=[];
+        foreach ($files as $key => $file) {
+            $date = Carbon::now()->format('dmY-his');
+            $fileName = $file->getClientOriginalName();
+            $extension = $file->getClientOriginalExtension();
+            $fileSize = $file->getSize();
 
-        // $folder = Str::snake($folder);
+            if (!is_dir(storage_path('/app/public/uploads/' . $folder))) {
+               $folder_full  = storage_path('/app/public/uploads/' . $folder);
+               if (!is_dir($folder_full)) mkdir($folder_full, 0777, true);
+            }
+            $path = storage_path('/app/public/uploads/' . $folder);
 
-        if (!is_dir(storage_path('/app/public/uploads/' . $folder))) {
-           $folder_full  = storage_path('/app/public/uploads/' . $folder);
-           if (!is_dir($folder_full)) mkdir($folder_full, 0777, true);
+            $download =  $folder . '/';
+            $media = new Media();
+            if($user!=''){
+                $media->user_id = $user->id;
+                $mitra = $user->mitras->first();
+                $media->mitra_id = $mitra->id ?? null;
+            }
+            $media->extension = $extension;
+            $media->folder    = $folder;
+            $media->name      = str_replace($extension, '', $fileName) ;
+            $media->size      = $fileSize;
+            $media->filename  = $fileName;
+            $media->save();
+
+            $destinationPath = $path;
+            $original        = $media->slug . '-' . $date . '.' . $media->extension;
+            $file->move($destinationPath, $original);
+            Cache::tags(['medias'])->flush();
+
+            $filePath = '/uploads/'.$download . $original;
+            $media->filename  = $original;
+            $media->path = $filePath;
+            $media->url = env('ASSET_URL').$filePath;
+            $media->update();
+            $medias[] = MediaResource::make($media)->resolve();
         }
-        $path = storage_path('/app/public/uploads/' . $folder);
-
-        $download =  $folder . '/';
-        $media = new Media();
-        if($user!=''){
-            $media->user_id = $user->id;
-            $mitra = $user->mitras->first();
-            $media->mitra_id = $mitra->id ?? null;
-        }
-        $media->extension = $extinsion;
-        $media->folder    = $folder;
-        $media->name      = str_replace($extinsion, '', $fileName) ;
-        $media->size      = $fileSize;
-        $media->filename  = $fileName;
-        $media->save();
-
-        $filePath = 'uploads/'.$folder.'/' . $media->slug;
-        // $filePath = 'uploads/'.$folder.'/';
-
-        // $path =  Storage::disk("local")->putFileAs($filePath,  $file, $fileName);
-        $destinationPath = $path;
-        $original        = $media->slug . '-' . $date . '.' . $media->extension;
-        $file->move($destinationPath, $original);
-        // $path = Storage::disk('local')->put($filePath, file_get_contents($file));
-        // $path = Storage::disk('local')->url('0');
-        // $url = Storage::disk('s3')->url($filePath);
-
-        Cache::tags(['medias'])->flush();
-
-        $media->path      = $filePath;
-        // $media->url       =  $filePath = 'uploads/'.$folder.'/' . $media->slug;
-        $media->url = $download . $original;
-        $media->update();
-
-
-
         $return['status'] = true;
-        $return['data'] =  $media;
+        $return['data'] =  $medias;
         $return['message'] = 'succses';
         return $return;
     } catch (Exception $e) {

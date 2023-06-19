@@ -1,7 +1,9 @@
+
 <script>
 import VueSelect from '@/Snippets/vueselect.mjs';
+import {  defineComponent } from "vue";
 
-export default ({
+export default defineComponent({
   components: {
     VueSelect
   },
@@ -86,14 +88,9 @@ export default ({
     },
 
   }
-})
+});
 </script>
 
 <template>
   <VueSelect :multiple="multiple" :class="classname" v-model="selectedOption" :options="options" @update:modelValue="changeSelect" :label="label" :placeholder="placeholder" :disabled="disable"/>
 </template>
-
-<style>
-@import "vue-select/dist/vue-select.css";
-
-</style>

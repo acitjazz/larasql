@@ -44,8 +44,7 @@ class MediaController extends Controller
         $date = Carbon::now()->format('dmY-his');
 
         $folder = Str::snake($request->folder);
-        $image = $request->file('file');
-        $uploads = uploadLocal($image, $folder);
+        $uploads = uploadLocal($request, $folder);
         return $uploads;
         if($uploads['status']==true){
             return response()->json(new MediaResource($uploads['data']));

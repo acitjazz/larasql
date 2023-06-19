@@ -1,112 +1,90 @@
+<script setup>
+import { useDropzone } from "vue3-dropzone";
+import { usePage} from '@inertiajs/inertia-vue3';
+import { ref} from 'vue';
+import axios from "axios";
+
+const props = defineProps(['modelValue','folder','title','endpoint']);
+
+const emit = defineEmits(['update:modelValue','uploaded']);
+
+const input = ref(null);
+let resfiles = ref([]);
+
+resfiles.value = props.modelValue ?  (props.modelValue.length == 0 ?  [] : JSON.parse(props.modelValue)) : [];
+
+const saveFile = (files) => {
+    const formData = new FormData();
+    formData.append('_token',  usePage().props.value.csrf_token);
+    formData.append('name', props.title);
+    formData.append('folder', props.folder);
+    for (var x = 0; x < files.length; x++) {
+    formData.append("file[]", files[x]);
+    }
+    axios({
+        method: 'POST',
+        url: props.endpoint ??  route('media.store'),
+        data: formData,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        onprocessfileprogress: (e) => {
+          console.log(e.lengthComputable, e.loaded, e.total)
+        }
+    }).then(response => {
+        resfiles.value = response.data.data;
+        emit('update:modelValue',JSON.stringify(resfiles.value));
+        emit('uploaded',resfiles.value);
+    }).catch((thrown) => {
+        if (axios.isCancel(thrown)) {
+            console.log('Request canceled', thrown.message)
+        } else {
+            // handle error
+        }
+    })
+}
+const onDrop = (acceptFiles, rejectReasons) => {
+      saveFile(acceptFiles);
+      console.log(rejectReasons);
+}
+
+const remove = (file) => {
+    const formData = new FormData();
+    formData.append('_token',  usePage().props.value.csrf_token);
+    axios({
+        method: 'POST',
+        url:  route('media.forceDelete',{media: file.id}),
+        data: formData,
+    }).then(response => {
+        resfiles.value = resfiles.value.filter(f => f.id != file.id);
+        emit('update:modelValue',resfiles.value);
+        emit('uploaded',resfiles.value);
+    }).catch((thrown) => {
+            console.log('Request canceled', thrown)
+    })
+}
+
+
+const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
+
+</script>
+
 <template>
-    <file-pond
-      name="file"
-      ref="pond"
-      :label-idle="idleText"
-      :allow-multiple="limit == 1 ? false : true"
-      :max-files="limit"
-      :accepted-file-types="filetype"
-      :server="server"
-      :files="myFiles"
-      credits="false"
-      @removefile="removefile({revert: true})"
-      @updatefiles="updatefiles($event)"
-
-    />
- </template>
-
-  <script setup>
-  import vueFilePond from "vue-filepond";
-  import "filepond/dist/filepond.min.css";
-  import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
-  import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
-  import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-  import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-  import FilePondPluginFilePoster from 'filepond-plugin-file-poster';
-  import { ref } from "vue";
-  import { usePage} from '@inertiajs/inertia-vue3';
-
-  const emit = defineEmits(['update:modelValue','uploaded']);
-  const props = defineProps(['modelValue','source','title','folder','filetype','placeholder','limit']);
-  const pond = ref(null)
-  // Create component
-  const FilePond = vueFilePond(
-    FilePondPluginFileValidateType,
-    FilePondPluginImagePreview,
-    FilePondPluginFilePoster
-  );
- const idleText = ref(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"/></svg> Drag & Drop your files or <span class="filepond--label-action"> Browse </span>`)
- const server = ref({
-                    url:usePage().props.value.env.app_url,
-                    revert:null,
-                    restore: null,
-                    fetch: null,
-                    process: function(fieldName, file, metadata, load, error, progress, abort){
-                        const formData = new FormData();
-                        formData.append('_token',  usePage().props.value.csrf_token);
-                        formData.append('name', props.title);
-                        formData.append('folder', props.folder);
-                        formData.append('file', file);
-                        axios({
-                            method: 'POST',
-                            url: '/backend/media',
-                            data: formData,
-                            onprocessfileprogress: (e) => {
-                                progress(e.lengthComputable, e.loaded, e.total)
-                            }
-                        }).then(response => {
-                            resfiles.value.push(response.data.data)
-                            emit('update:modelValue',resfiles.value);
-                            emit('uploaded',resfiles.value);
-                            load(response.data.data)
-                        }).catch((thrown) => {
-                            if (axios.isCancel(thrown)) {
-                                console.log('Request canceled', thrown.message)
-                            } else {
-                                // handle error
-                            }
-                        })
-                    },
-                    load(uniqueField , load ,error){
-                    }
-                });
-   const myFiles = ref([])
-   const resfiles = ref([])
-   myFiles.value  = props.modelValue?.map( (file) => {
-                        return {
-                            media:file,
-                            source: usePage().props.value.env.app_url+'/storage/uploads/'+file.url,
-                            options: {
-                                type: 'local',
-                                file: {
-                                    id: file.id,
-                                    name: file.name,
-                                    url: '/storage/uploads/'+file.url,
-                                    size: file.size,
-                                },
-                                metadata: {
-                                    poster: '/storage/uploads/'+file.url,
-                                }
-                            }
-                        }
-                    });
-    const removefile = (response) => {
-      //  console.log('response',response)
-    }
-    const updatefiles = (fieldName, file, metadata, load, error, progress, abort) => {
-        let files = pond.value.getFiles().map(f => f.file.id);
-    }
-  </script>
-
-
-<style lang="scss">
-.filepond--drop-label svg{
-    height: 24px;
-    margin: 0 auto;
-    fill: #31A6DA;
-}
-.filepond--drop-label{
-    font-size: 12px !important;
-    padding: 10px  0!important;
-}
-</style>
+    <div>
+        <div v-if="resfiles.length > 0" v-for="(file,i) in resfiles" :key="i">
+            <span class="block text-xs px-2 py-1 border relative">
+                {{ file.filename }}
+                <i @click="remove(file)" class="fa fa-xmark -right-2 -top-2 cursor-pointer absolute w-4 h-4 bg-primary text-white rounded-full !flex items-center justify-center"></i>
+            </span>
+        </div>
+        <div v-else v-bind="getRootProps()">
+            <input v-bind="getInputProps()" />
+            <div class="text-center border py-3 px-2 cursor-pointer">
+                <svg class="w-7 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                    <path class="fill-primary" d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"/>
+                </svg>
+               <span class="text-xs"> Drag & Drop your files</span>
+            </div>
+        </div>
+   </div>
+</template>

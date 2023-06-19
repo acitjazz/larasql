@@ -1,4 +1,3 @@
-import './bootstrap';
 import '../scss/admin.scss';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import globalComponent from "@/Admin/Components/globalComponent";
@@ -13,7 +12,7 @@ import Vue3Tour from 'vue3-tour'
 import 'vue3-tour/dist/vue3-tour.css'
 
 
-const appName =  'My Telin';
+const appName =  import.meta.env.APP_NAME;
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

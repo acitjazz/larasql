@@ -1,8 +1,6 @@
 <template>
     <div>
-        <Head>
-          <!-- <link rel="icon" type="image/png" :href="app_url+'/images/ff-favicon.png'" /> -->
-        </Head>
+        <Head></Head>
         <Header />
          <slot />
         <Footer/>

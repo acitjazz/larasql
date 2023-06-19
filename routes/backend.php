@@ -11,9 +11,9 @@ Route::group( ['prefix' => 'backend/media'],function(){
         Route::post('/destroy',[App\Http\Controllers\Api\UploadController::class ,'destroy'])->name('media.destroy');
     }
 );
-Route::group(['prefix' => 'backend', 'middleware' => ['auth.admin:web']], function() {
+Route::group(['prefix' => 'backend', 'middleware' => ['auth.guard:web']], function() {
     Route::group([ 'middleware' => ['password.expired']], function() {
-        Route::get('/', [App\Http\Controllers\Backend\DashboardController::class, 'index'])->name('backend');
+        Route::get('/', [App\Http\Controllers\Backend\DashboardController::class, 'index'])->name('backend.dashboard');
         Route::get('/dashboard', [App\Http\Controllers\Backend\DashboardController::class, 'index'])->name('dashboard.index');
 
         //Post

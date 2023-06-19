@@ -16,7 +16,7 @@ function navigation()
                 "menus" => [
                     [
                         "title" => "Dashboard",
-                        "link" => route('dashboard.index'),
+                        "link" => route('backend.dashboard'),
                         "icon" => "fa-table-columns",
                         "submenu" => [],
                         "method"=> 'get'
