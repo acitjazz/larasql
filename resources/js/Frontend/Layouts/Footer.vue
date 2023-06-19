@@ -13,23 +13,3 @@
         </Container>
     </footer>
 </template>
-<script>
-import IconFacebook from '@/Frontend/Components/Icons/IconFacebook.vue';
-import IconTwitter from '@/Frontend/Components/Icons/IconTwitter.vue';
-import IconInstagram from '@/Frontend/Components/Icons/IconInstagram.vue';
-export default {
-    components:{
-        IconFacebook,IconInstagram,IconTwitter
-    },
-    props:['title'],
-    data () {
-        return {
-            app_url:this.$page.props.env.app_url,
-            showContact:false,
-            page: {},
-        }
-    },
-    methods:{
-    },
-};
-</script>

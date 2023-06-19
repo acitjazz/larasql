@@ -39,9 +39,6 @@ const InputSlug = defineAsyncComponent(
 const InputSelect = defineAsyncComponent(
     () => import('@/Admin/Components/Forms/InputSelect.vue')
 )
-const SelectSection = defineAsyncComponent(
-    () => import('@/Admin/Components/Forms/SelectSection.vue')
-)
 const InputFeature = defineAsyncComponent(
     () => import('@/Admin/Components/Forms/InputFeature.vue')
 )
@@ -112,7 +109,6 @@ export default {
         Vue.component('InputSelect', InputSelect),
         Vue.component('InputFeature', InputFeature),
         Vue.component('InputGallery', InputGallery),
-        Vue.component('SelectSection', SelectSection),
         Vue.component('InputContentDesc', InputContentDesc),
         Vue.component('InputTitleNumber', InputTitleNumber),
         Vue.component('Tooltip', Tooltip),
